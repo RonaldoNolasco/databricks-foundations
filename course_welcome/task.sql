@@ -1,22 +1,27 @@
--- Listar archivos en una carpeta (magic words)
+-- listando archivos en el HDFS con las magic words
 %fs ls /mnt/training/ecommerce
 
--- Listar archivos en una carpeta (comando)
+-- listando archivos en el HDFS con el dbutils
 files = dbutils.fs.ls("/mnt/training/ecommerce")
 display(files)
 
--- Crear tablas basadas en parquets
+-- creando tablas con sql con parquets
 %sql
 CREATE TABLE IF NOT EXISTS users USING parquet OPTIONS (path "/mnt/training/ecommerce/users/users.parquet");
 CREATE TABLE IF NOT EXISTS sales USING parquet OPTIONS (path "/mnt/training/ecommerce/sales/sales.parquet");
 CREATE TABLE IF NOT EXISTS products USING parquet OPTIONS (path "/mnt/training/ecommerce/products/products.parquet");
 
--- otros comandos sql
+-- mostrando productos
 %sql
 select * from products
 
+-- promedio de ventas
 %sql
 select avg (purchase_revenue_in_usd) from sales
 
+-- nombres de evento diferentes
 %sql
 select distinct event_name from events
+
+-- cerrando el aula
+%run ./Includes/Classroom-Cleanup
