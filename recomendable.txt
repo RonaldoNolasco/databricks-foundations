@@ -21,3 +21,27 @@ from pyspark.sql.types import LongType
 from pyspark.sql.types import DoubleType
 from pyspark.sql.functions import col, lit
 from pyspark.sql.functions import udf
+
+#question1DF = (spark.sql("select * from orders"))
+
+question1DF = (spark
+               .read
+               .option("inferSchema", True)
+               .table(orders_table)
+              )
+
+answer1DF = (question1DF
+             .groupBy("shipping_address_state")
+             .count()
+             .orderBy("count", ascending=False)
+)
+
+"""answer1DF = (question1DF.groupBy("shipping_address_state")
+             .agg(count("order_id").alias("count"))
+             .sort(col("count").desc())
+             .select("shipping_address_state", "count")
+            )"""
+#display(answer1DF)
+answer1DF.createOrReplaceTempView(question_1_results_table)
+
+from pyspark.sql.functions import col, avg, max, min, sum
